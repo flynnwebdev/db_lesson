@@ -31,6 +31,7 @@ class BooksController < ApplicationController
   end
 
   def destroy
+    @book.cover.purge
     @book.destroy
     redirect_to books_path
   end
@@ -50,6 +51,6 @@ class BooksController < ApplicationController
   end
 
   def book_params
-    return params.require(:book).permit(:title, :author_id)
+    return params.require(:book).permit(:title, :author_id, :cover)
   end
 end

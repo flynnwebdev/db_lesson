@@ -14,6 +14,15 @@
     %>
     <%= f.collection_select :author_id, @authors, :id, :full_name %>
   </fieldset>
+  <% if @book.cover.attached? %>
+    <fieldset class="mb-2">
+      <%= cl_image_tag @book.cover.key, transformation: ["media_lib_thumb"], cloud_name: 'flynnwebdev' %>
+    </fieldset>
+  <% end %>
+  <fieldset class="mb-2">
+    <%= f.label :cover %>
+    <%= f.file_field :cover %>
+  </fieldset>
   <fieldset>
     <%= f.submit class: 'btn btn-primary' %>    
   </fieldset>

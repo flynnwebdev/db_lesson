@@ -17,7 +17,7 @@ class BookPolicy
   end
 
   def create?
-    return @user.has_role? :admin
+    return @user && @user.has_role?(:admin)
   end
 
   def new?
@@ -25,7 +25,7 @@ class BookPolicy
   end
 
   def update?
-    false
+    return @user && @user.has_any_role?(:admin, :editor)
   end
 
   def edit?
@@ -33,7 +33,11 @@ class BookPolicy
   end
 
   def destroy?
-    false
+    create?
+  end
+
+  def edit_or_destroy?
+    return @user && (edit? || destroy?)
   end
 
   class Scope
