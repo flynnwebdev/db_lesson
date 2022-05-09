@@ -4,7 +4,7 @@ class BooksController < ApplicationController
   before_action :authenticate_user!, except: [:index, :show]
   before_action :check_auth
   before_action :set_book, only: [:show, :update, :destroy, :edit]
-  before_action :set_authors, only: [:new, :edit]
+  before_action :set_authors, only: [:new, :edit, :create, :update]
 
   def index
     @books = Book.all
@@ -18,16 +18,26 @@ class BooksController < ApplicationController
   end
 
   def create
-    book = Book.create!(book_params)
-    redirect_to book
+      @book = Book.create(book_params)
+      if @book.valid?
+        redirect_to @book
+      else
+        flash.now[:alert] = @book.errors.full_messages.join('<br>')
+        render 'new'
+      end
   end
 
   def edit
   end
 
   def update
-    @book.update(book_params)
-    redirect_to @book
+    begin
+      @book.update!(book_params)
+      redirect_to @book
+    rescue
+      flash.now[:alert] = @book.errors.full_messages.join('<br>').html_safe
+      render 'edit'
+    end
   end
 
   def destroy
